@@ -36,7 +36,7 @@ services:
       - backend
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./config/php.ini /usr/local/etc/php/php.ini
+      - ./config/php.ini:/usr/local/etc/php/php.ini
 
 ### Workspace ##################################
   workspace: 

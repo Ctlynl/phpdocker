@@ -56,7 +56,6 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./workspace/php.ini:/usr/local/etc/php/php.ini
-      - ./workspace/crontab/:${CRONTAB_CONF_DIR}
     stdin_open: true
     tty: true
 

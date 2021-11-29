@@ -60,9 +60,9 @@ RUN docker-php-source delete \
 
 #设置crontab
 ARG CRONTAB_CONF_DIR=/crontab
+COPY ./crontab ${CRONTAB_CONF_DIR}
 COPY ./start.sh /usr/bin/start.sh
-RUN chmod 744 /usr/bin/start.sh \
-    && start.sh ${CRONTAB_CONF_DIR}
+RUN chmod 744 /usr/bin/start.sh && start.sh ${CRONTAB_CONF_DIR}
 
 #安装composer composer global安装的插件默认放在用户的根目录 .composer文件夹
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer

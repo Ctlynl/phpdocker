@@ -48,14 +48,15 @@ services:
         - MONGODB_FILE_NAME=${PHP_CIL_MONGODB_EXT}
         - SWOOLE_FILE_NAME=${PHP_CLI_SWOOLE_EXT}
         - EVENT_FILE_NAME=${PHP_CLI_EVENT_EXT}
+        - CRONTAB_CONF_DIR=${CRONTAB_CONF_DIR}
     ports:
-      - 9501:9501
+      - "9501:9501"
     networks:
       - backend
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./workspace/php.ini:/usr/local/etc/php/php.ini
-      - ./workspace/crontab/:/etc/crontabs/
+      - ./workspace/crontab/:${CRONTAB_CONF_DIR}
     stdin_open: true
     tty: true
 

@@ -1,0 +1,115 @@
+version: "3.9" 
+
+services:
+### NGINX Server #########################################
+  nginx:
+    build:
+      context: ./nginx/
+      args: 
+        - PHP_UPSTREAM_CONTAINER=${NGINX_PHP_UPSTREAM_CONTAINER}
+        - PHP_UPSTREAM_PORT=${NGINX_PHP_UPSTREAM_PORT}
+    ports:
+      - ${NGINX_HOST_HTTP_PORT}:80
+    networks:
+      - backend
+    depends_on:
+      - php-fpm
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+
+### PHP-FPM ##############################################
+  php-fpm:
+    build: 
+      context: ./php-fpm/
+      args: 
+        - PHP_VERSION=${PHP_VERSION}
+        - PHP_REDIS_FILE_NAME=${PHP_FPM_REDIS_EXT}
+        - MONGODB_FILE_NAME=${PHP_FPM_MONGODB_EXT}
+    ports:
+      - ${PHP_FPM_RORT}:9000
+    depends_on:
+      - redis
+      - mysql
+      - mongo
+    networks:
+      - backend
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ./config/php.ini /usr/local/etc/php/php.ini
+
+### Workspace ##################################
+  workspace: 
+    build:
+      context: ./workspace
+      args: 
+        - PHP_VERSION=${PHP_VERSION}
+        - PHP_REDIS_FILE_NAME=${PHP_CLI_REDIS_EXT}
+        - MONGODB_FILE_NAME=${PHP_CIL_MONGODB_EXT}
+        - SWOOLE_FILE_NAME=${PHP_CLI_SWOOLE_EXT}
+        - EVENT_FILE_NAME=${PHP_CLI_EVENT_EXT}
+    ports:
+      - 9501:9501
+    networks:
+      - backend
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+      - ./workspace/php.ini:/usr/local/etc/php/php.ini
+      - ./workspace/crontab/:/etc/crontabs/
+    stdin_open: true
+    tty: true
+
+### Redis ################################################
+  redis: 
+    build: ./redis/
+    ports:
+      - ${REDIS_PORT}:6379
+    networks:
+      - backend
+    volumes:
+      - redis:/data
+
+### MySQL ################################################
+  mysql: 
+    build:
+      context: ./mysql
+      args:
+        - TZ=${MYSQL_TZ}
+    environment:
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - ${MYSQL_PORT}:3306
+    networks:
+      - backend
+    volumes:
+      - mysql:/var/lib/mysql
+      - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+
+### MongoDB ##############################################
+  mongo: 
+    build: ./mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - ${MONGODB_PORT}:27017
+    networks:
+      - backend
+    volumes:
+      - mongo:/data/db
+      - mongo:/data/configdb
+      - ${MONGO_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+
+networks:
+  backend:
+    driver: ${NETWORKS_DRIVER}
+
+volumes:
+  redis:
+    driver: ${VOLUMES_DRIVER}
+  mysql:
+    driver: ${VOLUMES_DRIVER}
+  mongo:
+    driver: ${VOLUMES_DRIVER}

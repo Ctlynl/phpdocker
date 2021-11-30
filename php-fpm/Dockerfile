@@ -38,10 +38,10 @@ RUN apk add --no-cache --virtual .build-deps \
         libxml2-dev \
         postgresql-dev \
         sqlite-dev \
-    && apk add --no-cache libpng-dev icu bzip2-dev gmp-dev libzip-dev libpq \
+    && apk add --no-cache libpng-dev icu bzip2-dev gmp-dev libzip-dev libpq libxslt-dev \
 	&& find /php-ext/ -name "*.tgz"|xargs -i tar -zxf {} -C /usr/src/php/ext/ \
 	&& docker-php-ext-install -j2 ${PHP_REDIS_FILE_NAME} ${MONGODB_FILE_NAME} bcmath gd gmp pdo_pgsql \
-	bz2 iconv zip mysqli \
+	bz2 iconv zip mysqli xsl \
 	&& apk del -f .build-deps \
 	&& docker-php-source delete \
 	&& rm -rf /php-ext \

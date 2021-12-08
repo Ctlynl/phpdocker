@@ -37,7 +37,7 @@ RUN find /php-ext/ -name "*.tgz"|xargs -i tar -zxf {} -C /usr/src/php/ext/;
 
 	# 安装php扩展
 RUN docker-php-ext-install -j2 bcmath bz2 calendar dba exif gd gettext gmp intl mysqli pcntl pspell shmop \
-	soap sockets sysvmsg sysvsem sysvshm xmlrpc xsl zip ${PHP_REDIS_FILE_NAME} ${MONGODB_FILE_NAME} \
+	soap sockets sysvmsg sysvsem sysvshm xmlrpc xsl pdo_mysql zip ${PHP_REDIS_FILE_NAME} ${MONGODB_FILE_NAME} \
 	# 安装envent扩展为什么要单独安装是因为evnet需要sockets扩展 但是在conf.d文件引入的ini配置文件排序是在sockets在上面
 	&& docker-php-ext-install -j2 --ini-name zz-event.ini ${EVENT_FILE_NAME} \
 	# 安装swoole扩展

@@ -18,3 +18,4 @@ RUN PHP_UPSTREAM="upstream php-upstream { server ${PHP_UPSTREAM_CONTAINER}:${PHP
 COPY nginx.conf /etc/nginx/
 
 EXPOSE 80
+EXPOSE 443

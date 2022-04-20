@@ -53,6 +53,7 @@ services:
         - CRONTAB_CONF_DIR=${CRONTAB_CONF_DIR}
     ports:
       - "9501:9501"
+    init: true
     networks:
       - backend
     volumes:

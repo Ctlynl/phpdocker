@@ -70,4 +70,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ 
 # 安装守护进程管理工具
 RUN apk add --no-cache supervisor;
 
+# 安装其他工具
+RUN apk add --no-cache htop vim pstree;
+
 WORKDIR /var/www

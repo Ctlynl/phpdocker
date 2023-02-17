@@ -39,6 +39,8 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
       - ./php-fpm/config/php.ini:/usr/local/etc/php/php.ini
+      - ./php-fpm/config/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./php-fpm/config/www.conf:/usr/local/etc/php-fpm.d/www.conf
 
 ### Workspace ##################################
   workspace: 

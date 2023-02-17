@@ -12,8 +12,6 @@ ARG MONGODB_FILE_NAME=mongodb-1.11.1
 RUN sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories
 
 COPY ./ext /php-ext/
-COPY ./config/php-fpm.conf /usr/local/etc/
-COPY ./config/www.conf /usr/local/etc/php-fpm.d
 
 RUN docker-php-source extract;
 
@@ -41,7 +39,7 @@ RUN apk add --no-cache --virtual .build-deps \
     && apk add --no-cache libpng-dev icu bzip2-dev gmp-dev libzip-dev libpq libxslt-dev gettext-dev \
 	&& find /php-ext/ -name "*.tgz"|xargs -i tar -zxf {} -C /usr/src/php/ext/ \
 	&& docker-php-ext-install -j2 ${PHP_REDIS_FILE_NAME} ${MONGODB_FILE_NAME} pdo_mysql bcmath gd gmp pdo_pgsql \
-	bz2 iconv zip mysqli xsl gettext sysvmsg sysvsem sysvshm xmlrpc \
+	bz2 iconv zip mysqli xsl gettext sysvmsg sysvsem sysvshm xmlrpc gettext \
 	&& apk del -f .build-deps \
 	&& docker-php-source delete \
 	&& rm -rf /php-ext \

@@ -11,12 +11,24 @@ ARG PHP_REDIS_FILE_NAME
 ARG MONGODB_FILE_NAME
 ARG SWOOLE_FILE_NAME
 ARG EVENT_FILE_NAME
+ARG GD_FREE_TYPE_NAME
 
 COPY ./ext/ /php-ext/
 
 RUN docker-php-source extract;
 
+ENV PHPIZE_DEPS \
+		autoconf \
+		dpkg-dev dpkg \
+		file \
+		g++ \
+		gcc \
+		libc-dev \
+		make \
+		pkgconf
+
 RUN apk add --no-cache \
+	$PHPIZE_DEPS \
 	libevent-dev \
 	libpng-dev \
 	icu-dev \
@@ -29,11 +41,15 @@ RUN apk add --no-cache \
 	libxslt-dev \
 	openssl-dev \
 	c-ares-dev \
-	curl-dev;
+	curl-dev \
+	freetype-dev;
 
-RUN find /php-ext/ -name "*.tgz"|xargs -i tar -zxf {} -C /usr/src/php/ext/;
+RUN find /php-ext/ -type f \( -name "*.tgz" -o -name "*.tar.gz" \) | xargs -i tar -zxf {} -C /usr/src/php/ext/;
 
 	# 安装php扩展
+RUN /usr/src/php/ext/${GD_FREE_TYPE_NAME}/configure --prefix=/usr/local/freetype \
+&& make && make install && docker-php-ext-configure gd --with-freetype=/usr/local/freetype;
+
 RUN docker-php-ext-install -j2 bcmath bz2 calendar dba exif gd gettext gmp intl mysqli pcntl pspell shmop \
 	soap sockets sysvmsg sysvsem sysvshm xsl pdo_mysql zip ${PHP_REDIS_FILE_NAME} ${MONGODB_FILE_NAME} \
 	# 安装envent扩展为什么要单独安装是因为evnet需要sockets扩展 但是在conf.d文件引入的ini配置文件排序是在sockets在上面

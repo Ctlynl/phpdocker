@@ -66,10 +66,10 @@ services:
     stdin_open: true
     tty: true
 
-### workspace-php8 ##################################
-  workspace-php8:
+### workspace8 PHP8 version ##################################
+  workspace8:
     build:
-      context: ./workspace-php8
+      context: ./workspace8
       args:
         - PHP_REDIS_FILE_NAME=${PHP8_CLI_REDIS_EXT}
         - MONGODB_FILE_NAME=${PHP8_CIL_MONGODB_EXT}
@@ -86,7 +86,7 @@ services:
       - backend
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-      - ./workspace-php8/php.ini:/usr/local/etc/php/php.ini
+      - ./workspace8/php.ini:/usr/local/etc/php/php.ini
     stdin_open: true
     tty: true
 

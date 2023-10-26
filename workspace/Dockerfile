@@ -14,6 +14,7 @@ ARG MONGODB_FILE_NAME
 ARG SWOOLE_FILE_NAME
 ARG EVENT_FILE_NAME
 ARG GD_FREE_TYPE_NAME
+ARG XDEBUG_FILE_NAME
 
 COPY ./ext/ /php-ext/
 
@@ -44,7 +45,8 @@ RUN apk add --no-cache \
 	openssl-dev \
 	c-ares-dev \
 	curl-dev \
-	freetype-dev;
+	freetype-dev \
+	imagemagick-dev;
 
 RUN find /php-ext/ -type f \( -name "*.tgz" -o -name "*.tar.gz" \) | xargs -i tar -zxf {} -C /usr/src/php/ext/;
 
@@ -53,7 +55,7 @@ RUN /usr/src/php/ext/${GD_FREE_TYPE_NAME}/configure --prefix=/usr/local/freetype
 && make && make install && docker-php-ext-configure gd --with-freetype=/usr/local/freetype;
 
 RUN docker-php-ext-install -j2 bcmath bz2 calendar dba exif gd gettext gmp intl mysqli pcntl pspell shmop \
-	soap sockets sysvmsg sysvsem sysvshm xmlrpc xsl pdo_mysql zip ${PHP_REDIS_FILE_NAME} ${MONGODB_FILE_NAME} \
+	soap sockets sysvmsg sysvsem sysvshm xmlrpc xsl pdo_mysql zip ${PHP_REDIS_FILE_NAME} ${MONGODB_FILE_NAME} ${XDEBUG_FILE_NAME} \
 	# 安装envent扩展为什么要单独安装是因为evnet需要sockets扩展 但是在conf.d文件引入的ini配置文件排序是在sockets在上面
 	&& docker-php-ext-install -j2 --ini-name zz-event.ini ${EVENT_FILE_NAME} \
 	# 安装swoole扩展
@@ -66,7 +68,9 @@ RUN docker-php-ext-install -j2 bcmath bz2 calendar dba exif gd gettext gmp intl 
 		--enable-cares \
 		--enable-mysqlnd \
 		--enable-debug \
-	&& docker-php-ext-install -j3 $SWOOLE_FILE_NAME;
+	&& docker-php-ext-install -j3 $SWOOLE_FILE_NAME \
+	&& pecl install imagick \
+	&& docker-php-ext-enable imagick;
 
 # 移除无用
 RUN docker-php-source delete \

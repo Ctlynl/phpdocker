@@ -29,6 +29,7 @@ services:
         - PHP_REDIS_FILE_NAME=${PHP_FPM_REDIS_EXT}
         - MONGODB_FILE_NAME=${PHP_FPM_MONGODB_EXT}
         - GD_FREE_TYPE_NAME=${PHP_FPM_GD_FREE_TYPE_NAME}
+        - XDEBUG_FILE_NAME=${PHP_FPM_XDEBUG_NAME}
     ports:
       - ${PHP_FPM_RORT}:9000
     depends_on:
@@ -54,6 +55,7 @@ services:
         - GD_FREE_TYPE_NAME=${PHP_CLI_GD_FREE_TYPE_NAME}
         - SWOOLE_FILE_NAME=${PHP_CLI_SWOOLE_EXT}
         - EVENT_FILE_NAME=${PHP_CLI_EVENT_EXT}
+        - XDEBUG_FILE_NAME=${PHP_CLI_XDEBUG_NAME}
         - CRONTAB_CONF_DIR=${CRONTAB_CONF_DIR}
     ports:
       - "9501:9501"

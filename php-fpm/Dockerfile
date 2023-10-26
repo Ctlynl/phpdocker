@@ -8,6 +8,7 @@ LABEL description="php-fpm"
 ARG PHP_REDIS_FILE_NAME=redis-5.1.1
 ARG MONGODB_FILE_NAME=mongodb-1.11.1
 ARG GD_FREE_TYPE_NAME=freetype-2.13.0
+ARG XDEBUG_FILE_NAME=xdebug-3.1.6
 
 #set镜像源
 RUN sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories
@@ -41,7 +42,7 @@ RUN apk add --no-cache --virtual .build-deps \
 	&& find /php-ext/ -type f \( -name "*.tgz" -o -name "*.tar.gz" \) | xargs -i tar -zxf {} -C /usr/src/php/ext/ \
 	&& /usr/src/php/ext/${GD_FREE_TYPE_NAME}/configure --prefix=/usr/local/freetype && make && make install \
 	&& docker-php-ext-configure gd --with-freetype=/usr/local/freetype \
-	&& docker-php-ext-install -j2 ${PHP_REDIS_FILE_NAME} ${MONGODB_FILE_NAME} pdo_mysql bcmath gd gmp pdo_pgsql \
+	&& docker-php-ext-install -j2 ${PHP_REDIS_FILE_NAME} ${MONGODB_FILE_NAME} ${XDEBUG_FILE_NAME} pdo_mysql bcmath gd gmp pdo_pgsql \
 	bz2 iconv zip mysqli xsl gettext sysvmsg sysvsem sysvshm xmlrpc gettext \
 	&& apk del -f .build-deps \
 	&& docker-php-source delete \
@@ -50,5 +51,8 @@ RUN apk add --no-cache --virtual .build-deps \
 	&& rm -rf ./php/php.ini-production \
 	&& rm -rf ./php-fpm.conf.default \
 	&& rm -rf ./php-fpm.d/www.conf.default;
+
+# 安装java
+RUN apk add --no-cache openjdk8-jre vim
 
 WORKDIR /var/www

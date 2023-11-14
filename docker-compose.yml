@@ -135,6 +135,25 @@ services:
       - mongo:/data/configdb
       - ${MONGO_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
 
+### rabbitmq ################################################
+  rabbitmq:
+    build:
+      context: ./rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - ${RABBITMQ_NODE_HOST_PORT}:5672
+      - ${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT}:15671
+      - ${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT}:15672
+    # 特权模式
+    privileged: true
+    networks:
+      - backend
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+      - ./rabbitmq/conf/:/etc/rabbitmq/
+
 networks:
   backend:
     driver: ${NETWORKS_DRIVER}
@@ -145,4 +164,6 @@ volumes:
   mysql:
     driver: ${VOLUMES_DRIVER}
   mongo:
+    driver: ${VOLUMES_DRIVER}
+  rabbitmq:
     driver: ${VOLUMES_DRIVER}

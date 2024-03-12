@@ -38,7 +38,7 @@ RUN apk add --no-cache --virtual .build-deps \
         libxml2-dev \
         postgresql-dev \
         sqlite-dev \
-    && apk add --no-cache freetype-dev libpng-dev icu bzip2-dev gmp-dev libzip-dev libpq libxslt-dev gettext-dev \
+    && apk add --no-cache freetype-dev libpng-dev icu-dev bzip2-dev gmp-dev libzip-dev libpq libxslt-dev gettext-dev \
 	&& find /php-ext/ -type f \( -name "*.tgz" -o -name "*.tar.gz" \) | xargs -i tar -zxf {} -C /usr/src/php/ext/ \
 	&& /usr/src/php/ext/${GD_FREE_TYPE_NAME}/configure --prefix=/usr/local/freetype && make && make install \
 	&& docker-php-ext-configure gd --with-freetype=/usr/local/freetype \
@@ -54,5 +54,9 @@ RUN apk add --no-cache --virtual .build-deps \
 
 # 安装java
 RUN apk add --no-cache openjdk8-jre vim
+
+# 解决 php iconv扩展 Wrong charset, conversion from GB2312 to UTF-8//IGNORE' 报错
+RUN apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.12/community/ --allow-untrusted gnu-libiconv=1.15-r2
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
 WORKDIR /var/www

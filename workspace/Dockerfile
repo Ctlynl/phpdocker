@@ -93,4 +93,8 @@ RUN apk add --no-cache supervisor;
 # 安装其他工具
 RUN apk add --no-cache htop vim pstree;
 
+# 解决 php iconv扩展 Wrong charset, conversion from GB2312 to UTF-8//IGNORE' 报错
+RUN apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.12/community/ --allow-untrusted gnu-libiconv=1.15-r2
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
+
 WORKDIR /var/www

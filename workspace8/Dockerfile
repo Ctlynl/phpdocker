@@ -58,8 +58,8 @@ RUN docker-php-ext-install -j2 bcmath bz2 calendar dba exif gd gettext gmp intl 
 	&& docker-php-ext-configure $SWOOLE_FILE_NAME \
 		--enable-openssl \
 		--with-openssl-dir=/usr/include/openssl \
-		--enable-http2 \
-		--enable-swoole-json \
+		#--enable-http2 \
+		#--enable-swoole-json \
 		--enable-swoole-curl \
 		--enable-cares \
 		--enable-mysqlnd \

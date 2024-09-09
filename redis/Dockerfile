@@ -1,4 +1,4 @@
-FROM redis:5.0.14-alpine3.14
+FROM redis:6.0-alpine3.14
 
 LABEL maintainer="make835215945@163.com"
 LABEL version="1.0"

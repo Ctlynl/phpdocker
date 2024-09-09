@@ -1,8 +1,8 @@
-FROM php:8.1.6-cli-alpine3.14
+FROM php:8.2-cli-alpine
 
 LABEL Maintainer="make835215945@163.com"
 LABEL Version="1.0"
-LABEL Description="php-cli8.1.6 composer cron supervisor swoole event socket"
+LABEL Description="php-cli8.2 composer cron supervisor swoole event socket"
 
 #set镜像源
 RUN sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories;
@@ -29,6 +29,7 @@ ENV PHPIZE_DEPS \
 
 RUN apk add --no-cache \
 	$PHPIZE_DEPS \
+	linux-headers \
 	libevent-dev \
 	libpng-dev \
 	icu-dev \

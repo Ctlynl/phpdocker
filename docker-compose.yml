@@ -80,7 +80,6 @@ services:
         - GD_FREE_TYPE_NAME=${PHP8_CLI_GD_FREE_TYPE_NAME}
         - CRONTAB_CONF_DIR=${CRONTAB_CONF_DIR}
     ports:
-      - "9501:9501"
       - "9502:9502"
       - "8080:8080"
       - "8081:8081"

@@ -1,4 +1,4 @@
-ARG PHP_VERSION
+ARG PHP_VERSION=7.4.26
 FROM php:${PHP_VERSION}-fpm-alpine3.14
 
 LABEL maintainer="make835215945@163.com"

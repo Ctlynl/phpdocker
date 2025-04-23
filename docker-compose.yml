@@ -38,6 +38,7 @@ services:
       - ./php-fpm/config/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - ./php-fpm/config/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ./php-fpm/config/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./php-fpm/config/pdo_kdb.ini:/usr/local/etc/php/conf.d/docker-php-ext-pdo_kdb.ini
 
 ### Workspace ##################################
   workspace: 

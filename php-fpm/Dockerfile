@@ -14,6 +14,8 @@ ARG XDEBUG_FILE_NAME=xdebug-3.1.6
 RUN sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories
 
 COPY ./ext /php-ext/
+COPY ./kdb/lib/* /usr/lib/
+COPY ./kdb/pdo_kdb.so /usr/local/lib/php/extensions/no-debug-non-zts-20190902/
 
 RUN docker-php-source extract;
 
